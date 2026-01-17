@@ -6,63 +6,70 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 
 import Engine.TableEngine;
+import Engine.Model.Row;
+import Engine.Parser.LogicalExpression;
+import Engine.Query.Condition;
+import Engine.Query.QueryClause;
+import Engine.Query.WhereClause;
 
 public class Delete {
-    TableEngine tableEngine=new TableEngine();
-    Insert insert=new Insert();
-    public void deleteTable(File currDbDir,String tableName,ArrayList<String> conditionCol,ArrayList<String> operator,ArrayList<String> conditionVal,ArrayList<String> logicalOperator) throws Exception{
+    LogicalExpression logicalExpression=new LogicalExpression();
+    Condition condition;
+    WhereEvaluator whereEvaluator=new WhereEvaluator();
+    public void deleteTable(File currDbDir,QueryClause query) throws Exception{
+        String tableName=query.getTable();
         File tablename=new File(currDbDir,tableName+".table");
         BufferedReader br=new BufferedReader(new FileReader(tablename));
-        int noOfCon=conditionCol.size();
         String line=br.readLine();
         String header=line;
-        String columnNameTemp[]=line.split("\\|");
-        int colSize=columnNameTemp.length;
-        //contains the tables columns name 
-        ArrayList<String> columnName=new ArrayList<>();
-        //contains the list of index of the columns to be included int the result
-        ArrayList<ArrayList<String>> table=new ArrayList<>();
-        while ((line = br.readLine()) != null) {
-            String[] values = line.split("\\|");
-            ArrayList<String> temp=new ArrayList<>();
-            for(String s:values){
-                temp.add(s);
-            }
-            table.add(temp);
-        }
-        int rowSize=table.size();
-        //boolean [] boolRow=new boolean[rowSize];
-        boolean [] boolRowResult=new boolean[rowSize];
-
-        //to check whether all colummns or specific columns
-        boolRowResult=tableEngine.whereCondition(table, columnName, conditionCol, operator, conditionVal, logicalOperator);
+        String colName[]=line.split("\\|");
+        WhereClause whereClause=query.getWhereClause();
+        int colSize=colName.length;
         File tempFile=new File(currDbDir,tableName+".temp");
         BufferedWriter bw=new BufferedWriter(new FileWriter(tempFile));
         bw.write(header);
         bw.newLine();
-        for(int i=0;i<rowSize;i++){
-            if(!boolRowResult[i]){  
-                bw.write(insert.createRow(table.get(i)));
+        while((line=br.readLine())!=null){
+            ArrayList<String> rowList=new ArrayList<>(Arrays.asList(line.split("\\|")));
+            //evaluate condition and store it in reformulatedexp
+            Row row=new Row();
+            for(int i=0;i<rowList.size();i++){
+                row.put(colName[i], rowList.get(i));
             }
-            bw.newLine();
+            if(whereEvaluator.evaluateWhere(row,whereClause)==0){
+                StringBuilder temp=new StringBuilder();
+                for(int i=0;i<colSize;i++){
+                    if(i-1!=colSize)
+                    temp.append(row.get(colName[i])).append("|");
+                    else{
+                        temp.append(row.get(colName[i]));
+                    }
+                }
+                System.out.println(temp);
+                bw.write(temp.toString());
+                bw.newLine();
+            }
         }
+        br.close();
         bw.close();
         File origFile=new File(currDbDir,tableName+".table");
         origFile.delete();
         tempFile.renameTo(new File(currDbDir,tableName+".table"));
         File tableFileName=new File(currDbDir,tableName+".table");
         if(tableFileName.exists()){
-            System.out.println("Delete operation performed successfully\n");
-            System.out.println("Table: "+tableName);
-            System.out.println(header);
-            for(int i=0;i<rowSize;i++){
-            if(!boolRowResult[i]){  
-                System.out.println(insert.createRow(table.get(i)));
+                System.out.println("Delete operation performed successfully\n");
+                System.out.println("Table: "+tableName);
+                File tabFile=new File(currDbDir,tableName+".table");
+                BufferedReader br2=new BufferedReader(new FileReader(tabFile));
+                String line2;
+                System.out.println();
+                while((line2=br2.readLine())!=null){
+                    System.out.println(line2);
+                }
+                br2.close();
             }
-        }
-        }
-        }
+    }
 }

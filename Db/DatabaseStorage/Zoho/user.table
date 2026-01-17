@@ -1,4 +1,3 @@
-id|name|age
-01|viswak|5
-02|sabari|21
-03|karthi|22
+user.id|user.name|user.age
+2|sabari|21|
+1|viswak|05|

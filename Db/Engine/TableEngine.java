@@ -3,12 +3,34 @@ import java.util.*;
 import java.io.*;
 import java.nio.file.Files;
 
-import Engine.DatabaseEngine;
 import Metadata.ColumnMetadata;
 
 public class TableEngine{
+    Scanner r=new Scanner(System.in);
     //public static DatabaseEngine dbEngine=new DatabaseEngine();
-    public void createTable(File currDbDir,String tableName,ArrayList<ColumnMetadata> tablesMetadatas) throws Exception{
+    public void createTable(File currDbBir) throws Exception{
+        r.nextLine();
+        System.out.println("Enter name of the table");
+        String tableName=r.nextLine();
+        System.out.println("Enter number of columns");
+        ArrayList<ColumnMetadata> tablesmMetadatas=new ArrayList<>();
+        int noOfCol=r.nextInt();
+        for(int i=0;i<noOfCol;i++){
+            r.nextLine();
+            System.out.println("Enter "+ i + "colummn details");
+            System.out.println();
+            System.out.println("Enter the column name");
+            String colName=r.nextLine();
+            System.out.println("Enter the column datatype");
+            String colType=r.nextLine();
+            System.out.println("is this column is primary key->Enter true or false");
+            boolean isPk=r.nextBoolean();
+            ColumnMetadata colmetadata=new ColumnMetadata(colName,colType,isPk);
+            tablesmMetadatas.add(colmetadata);
+        }
+        createTableMetaData(currDbBir,tableName,tablesmMetadatas);
+    }
+    public void createTableMetaData(File currDbDir,String tableName,ArrayList<ColumnMetadata> tablesMetadatas) throws Exception{
         
         //File currDbDir=dbEngine.getCurrentDatabase();
         File metaFile=new File(currDbDir,tableName+".meta");
