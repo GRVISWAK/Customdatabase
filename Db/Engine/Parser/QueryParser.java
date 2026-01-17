@@ -1,15 +1,22 @@
 package Engine.Parser;
 import java.util.*;
 import java.util.regex.*;
+
+import Engine.Query.Condition;
+import Engine.Query.WhereClause;
 public class QueryParser {
-    public ParseResult parseQuery(String query){
+    public WhereClause parseQuery(String query){
+        StringBuilder queryTemp=new StringBuilder(query);
+        queryTemp.insert(0,"(");
+        queryTemp.append(")");
+        query=queryTemp.toString();
         Pattern p=Pattern.compile("(\\(|\\)|\\band\\b|\\bor\\b|>=|<=|!=|>|<|=|[^()\\s]+)");
         ArrayList<String> tokens=new ArrayList<>();
         Matcher m=p.matcher(query);
         while(m.find()){
             tokens.add(m.group());
         }
-        ArrayList<ArrayList<String>> conditions=new ArrayList<>();
+        ArrayList<Condition> conditions=new ArrayList<>();
         //ArrayList<String> reformatedExp=new ArrayList<>();
         StringBuffer reformatedExp=new StringBuffer();
         int ind=2;
@@ -33,17 +40,12 @@ public class QueryParser {
                     op=m1.group();
                 }
                 String cond[]=token.split("[>=|<=|!=|=|>|<]");
-                temp.add(cond[0]);
-                temp.add(op);
-                temp.add(cond[1]);
                 reformatedExp.append((ind));
-                conditions.add(temp);
+                Condition condition=new Condition(cond[0], op, cond[1]);
+                conditions.add(condition);
                 ind++;
             }
         }
-        for(int i=0;i<reformatedExp.length();i++){
-            System.out.print(reformatedExp.charAt(i)+" ");
-        }
-        return new ParseResult(reformatedExp.toString(), conditions);
+        return new WhereClause(conditions, reformatedExp.toString());
     }
 }

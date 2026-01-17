@@ -7,6 +7,7 @@ import Engine.TableEngine;
 import Engine.Parser.LogicalExpression;
 import Engine.Parser.QueryParser;
 import Engine.TableOperation.Delete;
+import Engine.TableOperation.Insert;
 import Engine.TableOperation.Select;
 import Engine.TableOperation.Update;
 import Metadata.ColumnMetadata;
@@ -15,6 +16,7 @@ public class ConsoleUI {
     public static DatabaseEngine databaseEngine=new DatabaseEngine();
     public static TableEngine tableEngine=new TableEngine();
     public static Delete delete=new Delete();
+    public static Insert insert=new Insert();
     public static LogicalExpression logicalExpression=new LogicalExpression();
     public static Select select=new Select();
     Scanner r=new Scanner(System.in);
@@ -40,13 +42,19 @@ public class ConsoleUI {
             System.out.println("1. Create Table ");
             System.out.println("2. Insert into Table");
             System.out.println("3. Select data from table");
-            System.out.println("4. Update Table");
-            System.out.println("5. Perform delete operation in Table");
-            System.out.println("6. Evaluate a logical Expression");
-            System.err.println("7. select data with logical expression conditon");
+            System.err.println("4. select data with logical expression conditon");
+            System.out.println("5. Update Table");
+            System.out.println("6. Delete rows from table");
             int tablechoice=r.nextInt();
             r.nextLine();
             if(tablechoice==1) createTable();
+            if(tablechoice==2){
+                System.out.println("Enter the table name");
+                String tableName=r.nextLine();
+                System.out.println("Enter the values to enter in comma separeted");
+                String row=r.nextLine();
+                insert.insertRow(databaseEngine.getCurrentDatabase(), tableName, row);
+            }
             if(tablechoice==3){
                 System.out.println("Enter the table name");
                 String tableName=r.nextLine();
@@ -76,7 +84,7 @@ public class ConsoleUI {
                 }
                 tableEngine.selectData(databaseEngine.getCurrentDatabase(),tableName,selectedColumn,conditionCol,operator,conditionVal,logicalOperator);
             }
-            if(tablechoice==4){
+            if(tablechoice==5){
                 Update update=new Update();
                 System.out.println("Enter the table name");
                 String tableName=r.nextLine();
@@ -109,45 +117,21 @@ public class ConsoleUI {
                 }
                 update.updateTable(databaseEngine.getCurrentDatabase(),tableName,selectedColumn,selectedValue,conditionCol,operator,conditionVal,logicalOperator);
             }
-            if(tablechoice==5){
+            if(tablechoice==6){
                 Update update=new Update();
                 System.out.println("Enter the table name to perform delete operation");
                 String tableName=r.nextLine();
-                ArrayList<String> conditionCol=new ArrayList<>();
-                ArrayList<String> operator=new ArrayList<>();
-                ArrayList<String> conditionVal=new ArrayList<>();
-                ArrayList<String> logicalOperator=new ArrayList<>();
-                System.out.println("Do you want add conditions");
-                String isConditon=r.nextLine();
-                while(isConditon.equals("yes")){
-                    System.out.println("Enter the column name,operator,condition value in comma separated");
-                    String condInput=r.nextLine();
-                    String condInTemp[]=condInput.split(",");
-                    conditionCol.add(condInTemp[0]);
-                    operator.add(condInTemp[1]);
-                    conditionVal.add(condInTemp[2]);
-                    System.out.println("Do you want add another conditon");
-                    isConditon=r.nextLine();
-                    if(isConditon.equals("yes")){
-                        System.out.println("what logical operator would you like add between condtitions");
-                        String logicalOp=r.nextLine();
-                        logicalOperator.add(logicalOp);
-                    }
-                }
-                delete.deleteTable(databaseEngine.getCurrentDatabase(),tableName,conditionCol,operator,conditionVal,logicalOperator);
+                System.out.println("Enter the where conditon (enter the conditon without space like age=5) (If no where condition enter nil)");
+                String query=r.nextLine();
+               // delete.deleteTable(databaseEngine.getCurrentDatabase(),tableName,query);
             }
-            if(tablechoice==6){
-                System.out.println("Enter the expression");
-                String exp=r.nextLine();
-                logicalExpression.evaluateLogicalExp(exp);
-            }
-            if(tablechoice==7){
+            if(tablechoice==4){
                 System.out.println("Enter the table name");
                 String tableName=r.nextLine();
                 System.out.println("Enter the list of columns need to be updated in comma separated (if all column enter '*')");
                 String listCol=r.nextLine();
                 ArrayList<String> selectedColumn=new ArrayList<>(Arrays.asList(listCol.split(",")));
-                System.out.println("Enter the where conditon");
+                System.out.println("Enter the where conditon (enter the conditon without space like age=5)(If no where condition enter nil)");
                 String query=r.nextLine();
                 select.selectDataWithLogExp(databaseEngine.getCurrentDatabase(), tableName, selectedColumn, query);
             }
@@ -173,6 +157,6 @@ public class ConsoleUI {
             ColumnMetadata colmetadata=new ColumnMetadata(colName,colType,isPk);
             tablesmMetadatas.add(colmetadata);
         }
-        tableEngine.createTable(databaseEngine.getCurrentDatabase(),tableName,tablesmMetadatas);
+        tableEngine.createTableMetaData(databaseEngine.getCurrentDatabase(),tableName,tablesmMetadatas);
     }
 }

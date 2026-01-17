@@ -12,7 +12,7 @@ public class LogicalExpression {
             if(c=='('){
                 st.push(c);
             }
-            if(c==')'){
+            else if(c==')'){
                 StringBuilder str=new StringBuilder();
                 while(!st.empty()&&st.peek()!='('){
                     //pass condition
@@ -21,7 +21,7 @@ public class LogicalExpression {
                 str.reverse();
                 String tempExp=str.toString();
                 st.pop();
-                int logRes=(isConditonEvaluated(tempExp.charAt(0))==0)?evaluateCondition():tempExp.charAt(0)-'0';
+                int logRes=tempExp.charAt(0)-'0';
                 int len=tempExp.length();
                 for(int j=1;j<=len-1;j=j+2){
                     char ch=tempExp.charAt(j+1);
@@ -29,9 +29,6 @@ public class LogicalExpression {
                     //if the expression is already evaluated
                     if(Character.isDigit(ch)) condVal=ch-'0';
                     //check whether next character is a condition
-                    if(Character.isLetter(ch)){
-                        condVal=evaluateCondition();
-                    }
                     if(tempExp.charAt(j)=='&') logRes=logRes&condVal;
                     else logRes=logRes|condVal;
                 }
@@ -42,13 +39,5 @@ public class LogicalExpression {
             }
         }
         return st.peek()-'0';
-    }
-    public int isConditonEvaluated(char ch){
-        if(Character.isLetter(ch)) return 0;
-        //return the result
-        return 1;
-    }
-    public int evaluateCondition(){
-        return 1;
     }
 }
