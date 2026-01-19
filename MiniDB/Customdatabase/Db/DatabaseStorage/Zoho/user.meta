@@ -1,0 +1,2 @@
+table=user,
+columns=id:int:pk,name:string,age:int
