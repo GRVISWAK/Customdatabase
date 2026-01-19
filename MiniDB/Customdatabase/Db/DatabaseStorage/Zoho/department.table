@@ -1,0 +1,4 @@
+department.id|department.name|department.comp.id|department.revenue
+1|analytics|1|5000
+1|analytics|1|2000
+3|frontend|2|2000
