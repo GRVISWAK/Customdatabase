@@ -7,6 +7,15 @@ import Engine.Query.WhereClause;
 import java.util.*;
 
 public class WhereEvaluator {
+    public ArrayList<Row> applyWhere(ArrayList<Row> rows,WhereClause whereClause){
+        ArrayList<Row> result=new ArrayList<>();
+        for(Row row:rows){
+            if(evaluateWhere(row, whereClause)==1){
+                result.add(row);
+            }
+        } 
+        return result;
+    }
     public int evaluateWhere(Row row,WhereClause whereClause){
         String evalExp=whereClause.getevalExp();
         StringBuffer exp=new StringBuffer(evalExp);
@@ -15,7 +24,7 @@ public class WhereEvaluator {
                 char ch=exp.charAt(i);
                 if(Character.isDigit(ch)){
                     int ind=(int)ch-50;
-                    int res=conditions.get(ind).evaluateCondition2(row)==true?1:0;
+                    int res=conditions.get(ind).evaluateCondition(row)==true?1:0;
                     exp.setCharAt(i, (char)(res+'0'));
                 }
         }

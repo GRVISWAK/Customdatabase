@@ -1,4 +1,4 @@
-employee.id|employee.dept.id|employee.name
+id|department.id|name
 1|1|viswak
 2|1|karthi
 3|2|sabari

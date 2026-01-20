@@ -22,42 +22,30 @@ public class Condition {
     public String getConditionalVal(){
         return conditionVal;
     }
-    public int evaluateCondition(ArrayList<String> row,String colName[],Condition condition){
-        for(int i=0;i<row.size();i++){
-                if(condition.getCondtionCol().equals(colName[i])){
-                    String value=condition.getConditionalVal();
-                    switch(condition.getOperator()){
-                        case "=":{
-                            if(row.get(i).equals(value))
-                                return 1;
-                            break;
-                        }
-                        case ">":{
-                            if(Integer.parseInt(row.get(i))>Integer.parseInt(value))
-                                return 1;
-                            break;
-                        }
-                        case "<":{
-                             if(Integer.parseInt(row.get(i))<Integer.parseInt(value))
-                                return 1;
-                            break;
-                        }
-                    }
-                }
-        }
-        return 0;
-    }
-    public boolean evaluateCondition2(Row row){
+    public boolean evaluateCondition(Row row){
         String currCell=row.get(conditionCol);
         switch(operator){
             case "=":{
                 return currCell.equals(conditionVal);
             }
-            case" >":{
+            case ">":{
                 return Integer.parseInt(currCell)>Integer.parseInt(conditionVal);
             }
             case "<":{
                 return Integer.parseInt(currCell)<Integer.parseInt(conditionVal);
+            }
+            case ">=":{
+                return Integer.parseInt(currCell)>=Integer.parseInt(conditionVal);
+            }
+            case "<=":{
+                return Integer.parseInt(currCell)<=Integer.parseInt(conditionVal);
+            }
+            case "!=":{
+                return !(currCell.equals(conditionVal));
+            }
+            case "like":{
+                String newVal=conditionVal.replaceAll("%",".*");
+                return currCell.matches(newVal);
             }
             default:
                 throw new IllegalArgumentException("Unsupported operator: " + operator);

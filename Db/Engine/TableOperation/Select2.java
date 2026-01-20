@@ -27,7 +27,7 @@ public class Select2 {
             rows=joinExecutor.applyJoin(currDbDir, join, rows);
         }
         //get final table column list
-        Set<String> columns=rows.get(0).columns();
+        Set<String> columns=rows.get(0).getColumns();
         if(selectCol.get(0).equals("*")){
             selectCol.clear();
             for(String column:columns){

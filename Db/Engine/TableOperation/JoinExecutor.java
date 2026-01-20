@@ -25,7 +25,6 @@ public class JoinExecutor {
                     result.add(newRow);
                 }
             }
-            
         }   
         return result;
     }
