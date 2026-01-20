@@ -10,7 +10,9 @@ public class QueryParser {
         queryTemp.insert(0,"(");
         queryTemp.append(")");
         query=queryTemp.toString();
-        Pattern p=Pattern.compile("(\\(|\\)|\\band\\b|\\bor\\b|>=|<=|!=|>|<|=|[^()\\s]+)");
+        Pattern p = Pattern.compile("(\\(|\\)|\\band\\b|\\bor\\b|" +"[^()\\s]+\\s*(?:>=|<=|!=|=|>|<|\\blike\\b)\\s*[^()\\s]+)",
+        Pattern.CASE_INSENSITIVE);
+
         ArrayList<String> tokens=new ArrayList<>();
         Matcher m=p.matcher(query);
         while(m.find()){
@@ -21,6 +23,7 @@ public class QueryParser {
         StringBuffer reformatedExp=new StringBuffer();
         int ind=2;
         for(String token:tokens){
+            token.trim();
             if(token.equals("(")||token.equals(")")){
                 reformatedExp.append(token);
             }
@@ -31,17 +34,17 @@ public class QueryParser {
                 reformatedExp.append("|");
             }
             else{
-                ArrayList<String> temp=new ArrayList<>();
-                Pattern p1=Pattern.compile(">=|<=|!=|=|>|<");
+                Pattern p1=Pattern.compile("like|>=|<=|!=|=|>|<");
                 Matcher m1=p1.matcher(token);
                 String op="";
                 while(m1.find()){
                     //System.out.println(m1.group());
                     op=m1.group();
                 }
-                String cond[]=token.split("[>=|<=|!=|=|>|<]");
+                String cond[]=token.split("like|>=|<=|!=|=|>|<");
                 reformatedExp.append((ind));
-                Condition condition=new Condition(cond[0], op, cond[1]);
+                //System.out.println(cond[0].trim()+"-"+op.trim()+"-"+cond[1].trim());
+                Condition condition=new Condition(cond[0].trim(), op.trim(), cond[1].trim());
                 conditions.add(condition);
                 ind++;
             }

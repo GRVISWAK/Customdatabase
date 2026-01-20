@@ -16,7 +16,7 @@ public class TableScanner {
             String rowVal[]=line.split("\\|");
             Row row=new Row();
             for(int i=0;i<rowVal.length;i++){
-                row.put(colName[i],rowVal[i]);
+                row.put(tableName+"."+colName[i],rowVal[i]);
             }
             rows.add(row);
         }
