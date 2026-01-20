@@ -10,9 +10,9 @@ import Engine.Parser.LogicalExpression;
 import Engine.Query.QueryClause;
 import Engine.Query.QueryType;
 import Engine.QueryBuilder.ConsoleQueryBuilder;
+import Engine.Router.QueryRouter;
 import Engine.TableOperation.Delete;
 import Engine.TableOperation.Insert;
-import Engine.TableOperation.QueryRouter;
 import Engine.TableOperation.Select;
 
 public class ConsoleUI2 {

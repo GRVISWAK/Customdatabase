@@ -133,7 +133,7 @@ public class ConsoleUI {
                 ArrayList<String> selectedColumn=new ArrayList<>(Arrays.asList(listCol.split(",")));
                 System.out.println("Enter the where conditon (enter the conditon without space like age=5)(If no where condition enter nil)");
                 String query=r.nextLine();
-                select.selectDataWithLogExp(databaseEngine.getCurrentDatabase(), tableName, selectedColumn, query);
+                //select.selectDataWithLogExp(databaseEngine.getCurrentDatabase(), tableName, selectedColumn, query);
             }
         }
     }

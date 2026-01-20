@@ -19,7 +19,7 @@ public class Row {
         return values.get(column);
     }
 
-    public Set<String> columns() {
+    public Set<String> getColumns() {
         return values.keySet();
     }
 

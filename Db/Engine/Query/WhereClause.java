@@ -2,8 +2,6 @@ package Engine.Query;
 
 import java.util.ArrayList;
 
-import Engine.Parser.QueryParser;
-
 public class WhereClause {
     public ArrayList<Condition> conditions;
     public String evalExp;

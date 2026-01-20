@@ -1,4 +1,5 @@
-department.id|department.name|department.comp.id
-1|analytics|1
-2|security|1
-3|frontend|2
+id|name|comp.id|revenue
+1|analytics|1|5000
+1|analytics|1|4000
+1|analytics|2|2000
+3|frontend|2|2000
